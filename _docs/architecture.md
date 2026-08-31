@@ -8,12 +8,28 @@ Build a simple MVP that is free to run and easy to understand. The application r
 
 | Area | Choice | Why |
 | --- | --- | --- |
-| Application and user interface | Streamlit + Python | One application instead of a separate frontend and backend |
+| Programming language | Python 3.12 | The application language; familiar, readable, and well supported by Streamlit |
+| Application and user interface | Streamlit | One application instead of a separate frontend and backend |
 | Database | PostgreSQL 17 in Docker (`pgvector/pgvector:pg17`) | Free, reliable for concurrent users, and ready for later deployment |
 | Database access | SQLAlchemy + a PostgreSQL driver | Keeps database queries in Python and avoids a future SQLite-to-PostgreSQL migration |
 | Container orchestration | Docker Compose | Starts Streamlit and PostgreSQL together with one command, locally and later in deployment |
 | Scheduling | Checks made when the app is opened | No paid or separate scheduler service |
 | Deployment | Local computer | Free and private; no hosting bill |
+
+## Python packages
+
+The first version keeps dependencies intentionally small:
+
+| Package | Purpose |
+| --- | --- |
+| `streamlit` | Builds the complete web interface and runs the application |
+| `SQLAlchemy` | Defines database models and performs PostgreSQL queries from Python |
+| `psycopg[binary]` | PostgreSQL database driver used by SQLAlchemy |
+| `alembic` | Tracks and applies database-schema changes safely as the application evolves |
+
+Python's standard library covers the remaining initial needs: `datetime` and `zoneinfo` for weekly deadlines and project timezones; `os` for configuration; and `secrets`/`hashlib` for the simple local login approach.
+
+The project does not need FastAPI, Redis, Celery, a separate `pgvector` Python package, or an email package for the initial local MVP.
 
 ## System shape
 
