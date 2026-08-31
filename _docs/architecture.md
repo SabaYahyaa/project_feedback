@@ -11,6 +11,7 @@ Build a simple MVP that is free to run and easy to understand. The application r
 | Application and user interface | Streamlit + Python | One application instead of a separate frontend and backend |
 | Database | PostgreSQL 17 in Docker (`pgvector/pgvector:pg17`) | Free, reliable for concurrent users, and ready for later deployment |
 | Database access | SQLAlchemy + a PostgreSQL driver | Keeps database queries in Python and avoids a future SQLite-to-PostgreSQL migration |
+| Container orchestration | Docker Compose | Starts Streamlit and PostgreSQL together with one command, locally and later in deployment |
 | Scheduling | Checks made when the app is opened | No paid or separate scheduler service |
 | Deployment | Local computer | Free and private; no hosting bill |
 
@@ -20,17 +21,18 @@ Build a simple MVP that is free to run and easy to understand. The application r
 Browser
   |
   v
-Streamlit application
-  |
-  v
-PostgreSQL Docker container
+Docker Compose
+  |-- Streamlit application
+  `-- PostgreSQL Docker container
 ```
 
-There is no FastAPI service, hosted database, Redis instance, or cloud scheduler in this first version. Keeping the application in one Streamlit service makes the codebase much smaller and easier to follow. PostgreSQL runs locally in Docker and is accessed only by Streamlit.
+There is no FastAPI service, hosted database, Redis instance, or cloud scheduler in this first version. Docker Compose manages the Streamlit and PostgreSQL containers together, while Streamlit remains the only application service.
 
 ## Running the app
 
-The person running the project starts the local PostgreSQL Docker container, then starts Streamlit and opens the local application URL in a browser. PostgreSQL listens on `localhost:5432` when the Docker container is running.
+The person running the project starts the local application with Docker Compose, which starts PostgreSQL before Streamlit. They then open the Streamlit URL in a browser. PostgreSQL listens on `localhost:5432` when its container is running.
+
+The Compose file holds the service definitions, container image versions, internal networking, and non-secret configuration. Database passwords and other secrets are supplied through a local environment file that is not committed to Git.
 
 For a small team on the same network, Streamlit can later be made available on that local network. It should not be exposed to the public internet without adding proper authentication, HTTPS, and a production deployment setup.
 
@@ -107,4 +109,4 @@ Those exclusions keep the project free, understandable, and focused on validatin
 
 ## Future upgrade path
 
-Once the simple workflow is working, deploy the existing PostgreSQL schema to a managed PostgreSQL provider and host Streamlit only if you need public access, real multi-user authentication, reliable scheduled reminders, backups, or stronger privacy controls. The user roles, feedback fields, and weekly-cycle rules can remain the same.
+Once the simple workflow is working, use Docker Compose as the deployment baseline: deploy the Streamlit container and either the PostgreSQL container or a managed PostgreSQL provider. A public deployment still needs real multi-user authentication, reliable scheduled reminders, backups, and stronger privacy controls. The user roles, feedback fields, and weekly-cycle rules can remain the same.
