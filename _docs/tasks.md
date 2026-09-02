@@ -2,7 +2,7 @@
 
 ## 1. Create the Django project and passing test
 Goal: Establish a runnable Django project with one automated test that passes.
-Description: Create the initial Django project structure, dependency definition, and pytest configuration. Add one minimal test that can run locally and passes, without implementing product functionality.
+Description: Create the initial Django project structure, dependency definition, and pytest configuration. Add one minimal test that can run locally and passes, without implementing product functionality. Define these required Python packages in the dependency file: `Django`, `psycopg[binary]`, `django-environ`, `pytest`, `pytest-django`, `langchain`, `langchain-ollama`, and `pydantic`. Pin compatible versions after the initial environment is created. Do not add an external LLM SDK: the application will call the locally running Ollama service.
 
 ## 2. Define Django environment configuration
 Goal: Define the non-secret settings and secrets required by the Django application.
@@ -87,3 +87,10 @@ Description: Implement a cleanup service that identifies cycles whose configured
 ## 22. Add end-to-end workflow checks and run documentation
 Goal: Verify and document the full local MVP workflow.
 Description: Add automated checks for project roles, Friday closure, anonymous display, and completed-cycle cleanup. Write concise instructions for starting Django and PostgreSQL with Docker Compose, creating test users through Django admin, and running the test suite.
+
+## 23. Add local LLM feedback analysis
+Goal: Generate a manager-facing summary of a weekly cycle's feedback using a local Ollama model.
+Description: Configure LangChain's `ChatOllama` integration to use `gemma3:4b`, with the Ollama base URL and model name supplied through environment variables. Add a service that sends only the selected cycle's feedback to the model and returns a structured summary of themes, blockers, improvements, and suggested discussion points. Preserve anonymous submissions by excluding author identity from the prompt whenever a submission is anonymous. Add tests that mock the LLM client, so the test suite does not require Ollama or a downloaded model. Document the local prerequisite: install Ollama and run `ollama pull gemma3:4b`.
+
+## Optional packages for a later retrieval feature
+Use these only if we decide to search across historical feedback or uploaded documents: `pgvector`, `langchain-text-splitters`, and an Ollama embedding model such as `nomic-embed-text`. They are not required for the weekly-summary feature above.
